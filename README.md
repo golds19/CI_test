@@ -1,1 +1,1 @@
-simple flask Calculator
+simple flask Calculator and simple UI
