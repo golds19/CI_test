@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flask Calculator</title>
+  <style>
+    body { font-family: sans-serif; max-width: 400px; margin: 60px auto; }
+    input, select { width: 100%; padding: 8px; margin: 6px 0; box-sizing: border-box; }
+    button { padding: 10px 20px; cursor: pointer; }
+    #result { margin-top: 16px; font-size: 1.2em; font-weight: bold; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Calculator</h1>
+  <label>Number A <input type="number" id="a" value="0" step="any"></label>
+  <label>Number B <input type="number" id="b" value="0" step="any"></label>
+  <label>Operation
+    <select id="operation">
+      <option value="add">Add (+)</option>
+      <option value="subtract">Subtract (−)</option>
+      <option value="multiply">Multiply (×)</option>
+      <option value="divide">Divide (÷)</option>
+    </select>
+  </label>
+  <button onclick="calculate()">Calculate</button>
+  <div id="result"></div>
+
+  <script>
+    async function calculate() {
+      const a = document.getElementById("a").value;
+      const b = document.getElementById("b").value;
+      const operation = document.getElementById("operation").value;
+      const resultEl = document.getElementById("result");
+
+      const resp = await fetch("/calculate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ a, b, operation })
+      });
+      const data = await resp.json();
+
+      if (data.error) {
+        resultEl.innerHTML = `<span class="error">Error: ${data.error}</span>`;
+      } else {
+        resultEl.textContent = `Result: ${data.result}`;
+      }
+    }
+  </script>
+</body>
+</html>
